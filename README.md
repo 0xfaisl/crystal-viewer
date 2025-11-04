@@ -6,7 +6,6 @@ It is designed to be a lightweight, educational tool that runs directly in the b
 
 **Live Demo:** [https://<your-github-username>.github.io/crystal-viewer/](https://<your-github-username>.github.io/crystal-viewer/)
 
-![Crystal Viewer Screenshot](https://i.imgur.com/placeholder.png) <!-- Placeholder: Replace with an actual screenshot -->
 
 ## Features
 
