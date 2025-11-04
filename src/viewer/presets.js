@@ -28,7 +28,7 @@ export const presets = {
     },
     tetragonal: {
         name: "Tetragonal",
-        lattice: { a: 3, b: 3, c: 4, alpha: 90, beta: 90, gamma: 90 },
+        lattice: { a: 3, b: 3, c: 5, alpha: 90, beta: 90, gamma: 90 },
         basis: corners('A'),
         atomRadius: ATOM_RADIUS
     },
@@ -46,7 +46,7 @@ export const presets = {
     },
     monoclinic: {
         name: "Monoclinic",
-        lattice: { a: 3, b: 4, c: 5, alpha: 90, beta: 110, gamma: 90 },
+        lattice: { a: 3, b: 4, c: 5, alpha: 90, beta: 90, gamma: 110 },
         basis: corners('A'),
         atomRadius: ATOM_RADIUS
     },

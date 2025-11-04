@@ -92,7 +92,7 @@ function formatLatticeParams({ a, b, c, alpha, beta, gamma }) {
     const angles = [];
     if (alpha === 90 && beta === 90 && gamma === 90) angles.push('α=β=γ=90°');
     else if (alpha === beta && beta === gamma) angles.push('α=β=γ!=90°');
-    else if (alpha === 90 && gamma === 90) angles.push('α=γ=90°, β!=90°');
+    else if (alpha === 90 && beta === 90) angles.push('α=β=90°, γ!=90°');
     else angles.push('α!=β!=γ!=90°');
 
     return `${lengths.join(', ')}; ${angles.join(', ')}`;
