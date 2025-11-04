@@ -4,7 +4,7 @@ A simple, interactive, browser-based 3D viewer for basic crystal structures. Thi
 
 It is designed to be a lightweight, educational tool that runs directly in the browser with no installation or build steps required.
 
-**Live Demo:** [https://<your-github-username>.github.io/crystal-viewer/](https://<your-github-username>.github.io/crystal-viewer/)
+**Live Demo:** https://0xfaisl.github.io/crystal-viewer/
 
 
 ## Features
