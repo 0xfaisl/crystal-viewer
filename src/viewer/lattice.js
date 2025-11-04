@@ -19,10 +19,23 @@ import * as THREE from 'three';
 export function getLatticeVectors({ a, b, c, alpha, beta, gamma }) {
     const toRad = THREE.MathUtils.degToRad;
 
-    const cosAlpha = Math.cos(toRad(alpha));
-    const cosBeta = Math.cos(toRad(beta));
+    // Special case for hexagonal system to ensure perfect geometry
+    if (alpha === 90 && beta === 90 && gamma === 120) {
+        const v1 = new THREE.Vector3(a, 0, 0);
+        const v2 = new THREE.Vector3(b * Math.cos(toRad(120)), b * Math.sin(toRad(120)), 0);
+        const v3 = new THREE.Vector3(0, 0, c);
+        return { v1, v2, v3 };
+    }
+
+    const TOLERANCE = 1e-15;
+
+    let cosAlpha = Math.cos(toRad(alpha));
+    let cosBeta = Math.cos(toRad(beta));
     const cosGamma = Math.cos(toRad(gamma));
     const sinGamma = Math.sin(toRad(gamma));
+
+    if (Math.abs(cosAlpha) < TOLERANCE) cosAlpha = 0;
+    if (Math.abs(cosBeta) < TOLERANCE) cosBeta = 0;
 
     // v1 along x-axis
     const v1 = new THREE.Vector3(a, 0, 0);

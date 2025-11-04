@@ -11,7 +11,6 @@ const structureOrder = [
     { key: 'hexagonal', name: 'Hexagonal' },
     { key: 'bcc', name: 'Body-Centered Cubic' },
     { key: 'fcc', name: 'Face-Centered Cubic' },
-    { key: 'hcp', name: 'Hexagonal Close-Packed' },
 ];
 
 /**

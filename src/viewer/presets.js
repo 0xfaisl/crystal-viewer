@@ -2,7 +2,7 @@ const ATOM_RADIUS = 0.25;
 
 // --- Basis Helper Functions ---
 
-/** Returns an array of 8 corner atoms. */
+/** Returns an array of 8 corner atoms for a parallelepiped cell. */
 const corners = (kind = 'A') => [
     { pos: [0, 0, 0], kind }, { pos: [1, 0, 0], kind },
     { pos: [0, 1, 0], kind }, { pos: [0, 0, 1], kind },
@@ -59,7 +59,7 @@ export const presets = {
     hexagonal: {
         name: "Hexagonal",
         lattice: { a: 3, b: 3, c: 5, alpha: 90, beta: 90, gamma: 120 },
-        basis: corners('A'),
+        basis: [], // Atoms are drawn by a special function
         atomRadius: ATOM_RADIUS
     },
     bcc: {
@@ -72,16 +72,6 @@ export const presets = {
         name: "Face-Centered Cubic",
         lattice: { a: 4, b: 4, c: 4, alpha: 90, beta: 90, gamma: 90 },
         basis: [...corners('A'), ...faceCenters('B')],
-        atomRadius: ATOM_RADIUS
-    },
-    hcp: {
-        name: "Hexagonal Close-Packed",
-        lattice: { a: 3, b: 3, c: 4.9, alpha: 90, beta: 90, gamma: 120 },
-        basis: [
-            ...corners('A'),
-            { pos: [1/3, 2/3, 0.5], kind: 'B' },
-            { pos: [2/3, 1/3, 0.5], kind: 'B' },
-        ],
         atomRadius: ATOM_RADIUS
     }
 };
