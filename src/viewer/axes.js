@@ -2,14 +2,13 @@ import * as THREE from 'three';
 import { CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 
 /**
- * Creates and adds labeled axes to the scene.
- * @param {THREE.Scene} scene The scene to add the axes to.
+ * Creates and returns a THREE.Group containing labeled axes.
  * @param {number} length The length of the axes.
+ * @returns {THREE.Group}
  */
-export function drawAxes(scene, length = 3) {
+export function drawAxes(length = 1.5) {
     const axes = new THREE.Group();
-
-    const axisMaterial = (color) => new THREE.LineBasicMaterial({ color });
+    const axisMaterial = (color) => new THREE.LineBasicMaterial({ color: 0x888888 });
 
     // X-axis (a)
     const xAxisGeo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(length, 0, 0)]);
@@ -31,10 +30,6 @@ export function drawAxes(scene, length = 3) {
         const div = document.createElement('div');
         div.className = 'axis-label';
         div.textContent = text;
-        div.style.color = '#555';
-        div.style.fontFamily = 'system-ui, sans-serif';
-        div.style.fontSize = '14px';
-
         const label = new CSS2DObject(div);
         label.position.copy(position);
         return label;
@@ -49,5 +44,5 @@ export function drawAxes(scene, length = 3) {
     const cLabel = createLabel('c', new THREE.Vector3(0, 0, length + 0.2));
     axes.add(cLabel);
 
-    scene.add(axes);
+    return axes;
 }

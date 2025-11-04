@@ -12,6 +12,7 @@ import { initPanel } from './ui/panel.js';
 let scene, camera, renderer, labelRenderer, controls;
 let currentStructure = new THREE.Group();
 let cellCenter = new THREE.Vector3();
+let frustumSize = 10; // Initial frustum size
 
 function init() {
     // --- Scene Setup ---
@@ -20,21 +21,20 @@ function init() {
 
     // --- Camera Setup ---
     const aspect = window.innerWidth / window.innerHeight;
-    const frustumSize = 10;
     camera = new THREE.OrthographicCamera(
         frustumSize * aspect / -2,
         frustumSize * aspect / 2,
         frustumSize / 2,
         frustumSize / -2,
         0.1,
-        100
+        1000 // Increased far plane for larger structures
     );
-    camera.position.set(5, 5, 5);
+    camera.position.set(10, 10, 10);
     scene.add(camera);
 
     // --- Renderer Setup ---
     const canvas = document.getElementById('viewer');
-    renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, logarithmicDepthBuffer: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
 
@@ -42,24 +42,26 @@ function init() {
     labelRenderer = new CSS2DRenderer();
     labelRenderer.setSize(window.innerWidth, window.innerHeight);
     labelRenderer.domElement.style.position = 'absolute';
-    labelRenderer.domElement.style.top = '0px';
+    labelRenderer.domElement.style.top = '60px'; // Offset for the toolbar
+    labelRenderer.domElement.style.pointerEvents = 'none'; // Let mouse events pass through
     document.body.appendChild(labelRenderer.domElement);
 
     // --- Controls ---
-    controls = new OrbitControls(camera, labelRenderer.domElement);
+    controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.1;
     controls.screenSpacePanning = false;
 
     // --- Lighting ---
-    const ambientLight = new THREE.AmbientLight(0x404040, 2);
+    const ambientLight = new THREE.AmbientLight(0x606060, 2);
     scene.add(ambientLight);
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
     directionalLight.position.set(1, 1, 1);
     scene.add(directionalLight);
 
     // --- Content ---
-    drawAxes(scene);
+    const axes = drawAxes();
+    scene.add(axes);
     scene.add(currentStructure);
 
     // --- UI ---
@@ -71,11 +73,10 @@ function init() {
 
     // --- Start ---
     animate();
-    console.log('Crystal Viewer initialized.');
+    console.log('Crystal Viewer initialized and enhanced.');
 }
 
 function clearStructure() {
-    // Clear all children from the current structure group
     while (currentStructure.children.length > 0) {
         currentStructure.remove(currentStructure.children[0]);
     }
@@ -97,12 +98,20 @@ function drawStructure(presetKey) {
     currentStructure.add(cell);
     currentStructure.add(atoms);
 
-    // Update controls target
-    cellCenter = new THREE.Vector3()
-        .add(latticeVectors.v1)
-        .add(latticeVectors.v2)
-        .add(latticeVectors.v3)
-        .multiplyScalar(0.5);
+    // --- Auto-center and Scale --- 
+    const box = new THREE.Box3().setFromObject(currentStructure);
+    const size = box.getSize(new THREE.Vector3());
+    const center = box.getCenter(new THREE.Vector3());
+
+    // Center the structure
+    currentStructure.position.sub(center);
+
+    // Calculate optimal frustum size
+    const maxDim = Math.max(size.x, size.y, size.z);
+    frustumSize = maxDim * 1.5; // Add 50% padding
+    cellCenter.copy(center);
+
+    onWindowResize(); // Update camera projection
     resetView();
 }
 
@@ -114,21 +123,22 @@ function animate() {
 }
 
 function onWindowResize() {
-    const aspect = window.innerWidth / window.innerHeight;
-    const frustumSize = 10;
+    const aspect = window.innerWidth / (window.innerHeight - 60); // Adjust for toolbar height
     camera.left = frustumSize * aspect / -2;
     camera.right = frustumSize * aspect / 2;
     camera.top = frustumSize / 2;
     camera.bottom = frustumSize / -2;
     camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    labelRenderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(window.innerWidth, window.innerHeight - 60);
+    labelRenderer.setSize(window.innerWidth, window.innerHeight - 60);
 }
 
 function resetView() {
     controls.reset();
-    camera.position.set(5, 5, 5);
-    controls.target.copy(cellCenter);
+    // The structure is now centered at (0,0,0), so the target is (0,0,0)
+    controls.target.set(0, 0, 0);
+    camera.position.set(10, 10, 10); // Keep a consistent starting distance
+    camera.lookAt(0,0,0);
 }
 
 // --- Run --- 

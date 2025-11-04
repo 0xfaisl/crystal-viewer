@@ -7,7 +7,7 @@ import * as THREE from 'three';
  */
 export function drawUnitCell({ v1, v2, v3 }) {
     const cellGroup = new THREE.Group();
-    const material = new THREE.LineBasicMaterial({ color: 0x000000 });
+    const material = new THREE.LineBasicMaterial({ color: 0x999999 });
 
     const p0 = new THREE.Vector3(0, 0, 0);
     const p1 = v1.clone();
